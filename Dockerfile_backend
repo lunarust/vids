@@ -1,0 +1,13 @@
+FROM rust:slim-trixie as builder
+WORKDIR app
+COPY . .
+RUN cd ./backend/ && cargo build --release
+
+FROM  rust:slim-trixie as runtime
+WORKDIR app
+COPY --from=builder /app/start.sh /app
+COPY --from=builder /app/target/release/backend /app/
+COPY --from=builder /app/common /app/common
+VOLUME /app/config /app/log
+EXPOSE 9000
+ENTRYPOINT ["./start.sh"]

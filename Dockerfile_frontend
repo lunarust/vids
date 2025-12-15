@@ -1,0 +1,16 @@
+FROM rust:slim-trixie as febuilder
+WORKDIR app
+COPY . .
+RUN rustup target add wasm32-unknown-unknown
+RUN cargo install wasm-bindgen-cli
+RUN cargo install trunk
+RUN cd /app/frontend/ && trunk build
+
+
+FROM rust:slim-trixie as runtime
+WORKDIR app
+COPY --from=febuilder /app/frontend/dist/ /app/
+COPY --from=febuilder /serve.py /app/
+RUN echo $(ls -1 /app)
+EXPOSE 8000
+CMD ["python3", "serve.py"]

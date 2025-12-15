@@ -1,0 +1,107 @@
+html,
+body {
+  font-size: 14px;
+  font-family: Noto Sans;
+  color: #595959;
+}
+p {
+    padding: 0px;
+    marging: 0px;
+}
+iframe {
+  border: thin;
+
+}
+.navigation{
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 320px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+//  background-color: #111; /* Black */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 5px;
+  font-size: 12px;
+  padding-left: 5px;
+}
+#content {
+  position: fixed;
+  top: 30px;
+  left: 400px;
+}
+#action {
+  position: fixed;
+  top: 0px;
+  left: 400px;
+
+}
+.myButton {
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+	background-color:#ededed;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	cursor:pointer;
+	color:#777777;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #ffffff;
+}
+.myButton:hover {
+	background:linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
+	background-color:#dfdfdf;
+
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+.button  {
+  background-color: transparent;
+  color: #36454F;
+  border-width: 0;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 24px;
+  list-style: none;
+  margin: 4;
+  padding: 4px 6px;
+  text-align: center;
+  transition: all 200ms;
+  vertical-align: baseline;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.button:hover {
+    color: #DCDCDC;
+    background-color:  #36454F;
+    box-shadow:0 8px 16px 0 rgba(0,0,0,0.6);
+}
+.menu_item {
+  padding: 0px;
+  marging: 0px;
+  cursor: pointer;
+}
+
+
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #71797E;
+  color: #efefef;
+  text-align: center;
+  z-index: 0;
+}

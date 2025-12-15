@@ -1,0 +1,23 @@
+version: "3"
+services:
+ backend:
+  image: vidsbe
+  container_name: vidsbe
+  ports:
+    - "9000:9000"
+  restart: always
+  networks:
+    - vids_nw
+
+ frontend:
+  image: vidsfe
+  container_name: vidsfe
+  ports:
+    - "8000:8000"
+  restart: always
+  networks:
+    - vids_nw
+
+networks:
+  vids_nw:
+    external: true
