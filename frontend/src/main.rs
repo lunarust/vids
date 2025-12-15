@@ -58,7 +58,7 @@ fn VideoDetails(VideosDetailsProps { video }: &VideosDetailsProps) -> Html {
    });
 
    let set_delete = Callback::from(move |_| {
-       let testurl = format!("http://localhost:9000/remove/{}", cloned_vid.name);
+       let testurl = format!("http://bors.greece.local:9000/remove/{}", cloned_vid.name);
         web_sys::console::log_1(&"Hello World I want to remove :: ".into());
         web_sys::console::log_1(&cloned_vid.name.to_string().into());
         spawn_local(async move {
@@ -71,7 +71,7 @@ fn VideoDetails(VideosDetailsProps { video }: &VideosDetailsProps) -> Html {
 
 
    let set_archive = Callback::from(move |_| {
-       let testurl = format!("http://localhost:9000/archive/{}", arch_vid.name);
+       let testurl = format!("http://bors.greece.local:9000/archive/{}", arch_vid.name);
         web_sys::console::log_1(&"Hello World I want to archive :: ".into());
         web_sys::console::log_1(&arch_vid.name.to_string().into());
         spawn_local(async move {
@@ -113,7 +113,7 @@ fn app() -> Html {
            let mut fetched_videos: Vec<Video> = vec![];
            wasm_bindgen_futures::spawn_local(async move {
                let response =
-               Request::get("http://localhost:9000/list")
+               Request::get("http://bors.greece.local:9000/list")
                    .header("Content-Type", "application/json")
                    .send()
                    .await;

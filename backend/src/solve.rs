@@ -60,7 +60,7 @@ pub async fn return_list_video() -> Result<impl Reply, warp::Rejection> {
                               id: count, name: path.file_name().unwrap().to_str().expect("plop").to_string(),
                               path: path.display().to_string(),
                               what: "video".to_string(),
-                              url: path.display().to_string().replace("/opt/vids", "http://localhost/vids")
+                              url: path.display().to_string().replace("/opt/vids", "http://bors.greece.local/vids")
                           }),
                   "png" =>
                       videos.push(
@@ -68,7 +68,7 @@ pub async fn return_list_video() -> Result<impl Reply, warp::Rejection> {
                               id: count, name: path.file_name().unwrap().to_str().expect("plop").to_string(),
                               path: path.display().to_string(),
                               what: "picture".to_string(),
-                              url: path.display().to_string().replace("/opt/vids", "http://localhost/vids")
+                              url: path.display().to_string().replace("/opt/vids", "http://bors.greece.local/vids")
                           }),
 
                   "gif" =>
@@ -77,7 +77,7 @@ pub async fn return_list_video() -> Result<impl Reply, warp::Rejection> {
                               id: count, name: path.file_name().unwrap().to_str().expect("plop").to_string(),
                               path: path.display().to_string(),
                               what: "animation".to_string(),
-                              url: path.display().to_string().replace("/opt/vids", "http://localhost/vids")
+                              url: path.display().to_string().replace("/opt/vids", "http://bors.greece.local/vids")
                           }),
                   _ => (),
               }
