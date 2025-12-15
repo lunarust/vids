@@ -32,7 +32,7 @@ pub async fn archive_video(myvideo: String) -> Result<impl Reply, warp::Rejectio
             let myfn = entry.path().file_name().unwrap();
             if myfn == myvideo.as_str() {
                 let dest = format!("/opt/vids/backup/{}", myvideo);
-                println!("This is the file I want to remove: {:?} > to > {:?}", entry, dest);
+                println!("This is the file I want to archiving: {:?} > to > {:?}", entry, dest);
 
                 fs::rename(entry.path(), dest);
             }
