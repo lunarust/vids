@@ -3,7 +3,11 @@
 
 ## Todo / Could do
 
+  - Test CORS:
 
+```bash
+curl -v --request OPTIONS 'http://bors.greece.local:9000' -H 'Origin: http://aetes.greece.local' -H 'Access-Control-Request-Method: GET'
+```
 
 
 

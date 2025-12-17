@@ -12,6 +12,11 @@ iframe {
   border: thin;
 
 }
+.topActions {
+  top: 0px;
+  left: 800px;
+  position: fixed;
+}
 .navigation{
   height: 100%; /* Full-height: remove this if you want "auto" height */
   width: 320px; /* Set the width of the sidebar */
@@ -27,13 +32,16 @@ iframe {
 }
 #content {
   position: fixed;
-  top: 30px;
+  top: 10px;
   left: 400px;
+  width: 100%;
 }
 #action {
   position: fixed;
   top: 0px;
-  left: 400px;
+  right: 10px;
+  width: 150px;
+
 
 }
 .myButton {
@@ -72,8 +80,8 @@ iframe {
   font-weight: 700;
   line-height: 24px;
   list-style: none;
-  margin: 4;
-  padding: 4px 6px;
+  margin: 8;
+  padding: 6px 8px;
   text-align: center;
   transition: all 200ms;
   vertical-align: baseline;
@@ -81,6 +89,7 @@ iframe {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  width: 120px;
 }
 .button:hover {
     color: #DCDCDC;
@@ -94,7 +103,17 @@ iframe {
 }
 
 
-
+.watermark {
+    color: #E0E0E0;
+    position: absolute;
+    opacity: 0.25;
+    font-size: 3em;
+    width: 20%;
+    text-align: right;
+    z-index: 1000;
+    right: 0px;
+    bottom: 0px;
+}
 .footer {
   position: fixed;
   left: 0;
