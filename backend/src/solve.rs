@@ -42,13 +42,13 @@ pub async fn archive_video(myvideo: String) -> Result<impl Reply, warp::Rejectio
     Ok(StatusCode::OK)
 }
 
-pub async fn return_list_video() -> Result<impl Reply, warp::Rejection> {
+pub async fn return_list_video(dir: String) -> Result<impl Reply, warp::Rejection> {
   println!("Fetching list of available videos");
 
   let mut count = 0;
   //let myPath: WalkDir::new("/home/rust/vids/");
   let mut videos: Vec<Video> = vec![];
-  for entry in WalkDir::new("/opt/vids/raw/").into_iter().filter_map(|e| e.ok()) {
+  for entry in WalkDir::new(format!("/opt/vids/{}/", dir)).into_iter().filter_map(|e| e.ok()) {
       if entry.file_type().is_file() {
           count +=1;
           let path = entry.path();

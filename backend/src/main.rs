@@ -14,12 +14,12 @@ async fn main() {
 
     println!("Good day ▼(´ᴥ`)▼ ");
 
-    solve::return_list_video().await;
+    //solve::return_list_video().await;
 
     let hello = warp::path!("hello" / String) // 3.
         .map(|name| format!("Hello, {}!", name)); // 4.
 
-    let list = warp::path!("list") // 3.
+    let list = warp::path!("list" / String) // 3.
 //           .and(warp::body::json())
            .and_then(solve::return_list_video);
 
