@@ -4,8 +4,9 @@ extern crate lazy_static;
 //use std::{ffi::OsStr, path::Path};
 use warp::{
     http::{header, Method},
-    Filter, Rejection,
+    Filter, Rejection
 };
+//use warp::log;
 mod solve;
 
 #[tokio::main]
@@ -15,12 +16,11 @@ async fn main() {
 
     //solve::return_list_video().await;
 
-    let hello = warp::path!("hello" / String) // 3.
-        .map(|name| format!("Hello, {}!", name)); // 4.
+    let hello = warp::path!("hello" / String)
+        .map(|name| format!("Hello, {}!", name));
 
-    let list = warp::path!("list" / String) // 3.
-//           .and(warp::body::json())
-           .and_then(solve::return_list_video);
+    let list = warp::path!("list" / String)
+        .and_then(solve::return_list_video);
 
     let remove = warp::path!("remove" / String)
         .and_then(solve::remove_video);
@@ -28,22 +28,30 @@ async fn main() {
     let archive = warp::path!("archive" / String)
         .and_then(solve::archive_video);
 
-    let soundout = warp::path!("soundout")
+    let soundout = warp::path!("soundout");
+    let soundout_route = soundout
         .and(warp::post())
         .and(warp::body::json())
-        .and_then(solve::remove_video);
+        .and_then(solve::remove_sound);
 
-    let route = warp::method()
-        .map(|method| {
-            format!("You sent a {} request!", method)
-    });
+    let extractsound = warp::path!("extractsound");
+    let extractsound_route = extractsound
+        .and(warp::post())
+        .and(warp::body::json())
+        .and_then(solve::extract_sound);
 
+    let togif = warp::path!("togif");
+    let togif_route = togif
+        .and(warp::post())
+        .and(warp::body::json())
+        .and_then(solve::to_gif);
 
     let routes = list
+    .or(soundout_route)
+    .or(extractsound_route)
+    .or(togif_route)
     .or(remove)
     .or(archive)
-    .or(hello)
-    .or(soundout)
     .with(
         warp::cors()
             .allow_origin("http://localhost")
@@ -55,7 +63,6 @@ async fn main() {
                 Method::DELETE,
                 Method::PUT,
                 Method::HEAD,
-                Method::PATCH,
                 Method::DELETE,
             ])
             .allow_headers(vec!["allow_origin", "allow_any_origin", "Access-Control-Allow-Origin",

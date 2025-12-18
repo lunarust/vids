@@ -126,7 +126,7 @@ pub fn Videos(props: &Props) -> Html {
 
 
             if let Some(video) = &*selected_video {
-                <Detail name={ video.name.to_string() } url={ video.url.to_string() } />
+                <Detail name={ video.name.to_string() } url={ video.url.to_string() } path={ video.path.to_string() } />
             }
 
             if !message.is_empty() {

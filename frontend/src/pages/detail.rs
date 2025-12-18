@@ -3,13 +3,15 @@ use gloo_net::http::Request;
 use wasm_bindgen_futures::spawn_local;
 use wasm_bindgen::{JsCast,UnwrapThrowExt};
 use crate::pages::video::Video;
+
+use serde::Serialize;
 use common::*;
 
 #[derive(Clone, Debug, PartialEq, Eq, Properties)]
 pub struct Props {
 //    pub id: usize,
     pub name: AttrValue,
-//    pub path: String,
+    pub path: String,
 //    pub what: String,
     pub url: String,
 }
@@ -55,6 +57,7 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
 
 
    let vidname = arch_vid.name.clone();
+   let vidpath = arch_vid.path.clone();
    let value = vidname.clone();
    let set_archive = Callback::from(move |_| {
        let vidname = value.clone();
@@ -70,23 +73,20 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
     }
     );
 
+   let valuename = vidname.clone();
+   let valuepath = vidpath.clone();
+   let extract_sound = Callback::from(move |_| {
+       let testurl = format!("http://bors.greece.local:9000/extractsound");
+       //let message = message.clone();
 
-   let remove_sound = Callback::from(move |_| {
-       let testurl = format!("http://bors.greece.local:9000/soundout");
-       let message = message.clone();
-
-//        web_sys::console::log_1(&"Hello World I want to archive :: ".into());
-//        web_sys::console::log_1(&arch_vid.name.to_string().into());
-
-        let vidname = vidname.clone();
-        let vidpath = arch_vid.path.clone();
+        let vidname = valuename.clone();
+        let vidpath = valuepath.clone();
         spawn_local(async move {
+            let vidreq: VideoRequest = common::VideoRequest{name: vidname.to_string(),path: vidpath.to_string()};
 
-            let jsonbody = serde_json::json!(common::VideoRequest{
-                name: vidname.to_string(),
-                path: vidpath.to_string()});
+            let jsonbody = serde_json::to_string(&vidreq).expect("Failed");
 
-
+            web_sys::console::log_1(&jsonbody.to_string().into());
             let _ = Request::post(testurl.as_str())
             .header("Content-Type", "application/json")
             .body(jsonbody.to_string()).expect("DRAMA")
@@ -99,8 +99,63 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
             }*/
 
         });
-    }
-    );
+    });
+
+   let valuename = vidname.clone();
+   let valuepath = vidpath.clone();
+
+   let remove_sound = Callback::from(move |_| {
+       let testurl = format!("http://bors.greece.local:9000/soundout");
+       //let message = message.clone();
+
+        let vidname = valuename.clone();
+        let vidpath = valuepath.clone();
+        spawn_local(async move {
+            let vidreq: VideoRequest = common::VideoRequest{name: vidname.to_string(),path: vidpath.to_string()};
+
+            let jsonbody = serde_json::to_string(&vidreq).expect("Failed");
+
+            web_sys::console::log_1(&jsonbody.to_string().into());
+            let _ = Request::post(testurl.as_str())
+            .header("Content-Type", "application/json")
+            .body(jsonbody.to_string()).expect("DRAMA")
+            .send()
+            .await;
+            /*
+            match response {
+                Ok(resp) if resp.ok() => message.set(format!("OK").into()),
+                _ => message.set(format!("Failed {:?}", response).into()),
+            }*/
+
+        });
+    });
+
+   let to_gif = Callback::from(move |_| {
+       let testurl = format!("http://bors.greece.local:9000/togif");
+       let message = message.clone();
+
+        let vidname = vidname.clone();
+        let vidpath = vidpath.clone();
+        spawn_local(async move {
+            let vidreq: VideoRequest = common::VideoRequest{name: vidname.to_string(),path: vidpath.to_string()};
+
+            let jsonbody = serde_json::to_string(&vidreq).expect("Failed");
+
+            web_sys::console::log_1(&jsonbody.to_string().into());
+            let _ = Request::post(testurl.as_str())
+            .header("Content-Type", "application/json")
+            .body(jsonbody.to_string()).expect("DRAMA")
+            .send()
+            .await;
+            /*
+            match response {
+                Ok(resp) if resp.ok() => message.set(format!("OK").into()),
+                _ => message.set(format!("Failed {:?}", response).into()),
+            }*/
+
+        });
+    });
+
     html! {
         <div id="content">
              <iframe width="1100" height="840"
@@ -110,9 +165,9 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
              <span id="action">
              <button onclick={ set_delete } class="button" >{ "Delete" }</button>
              <button onclick={ set_archive } class="button" >{ "Archive" }</button>
-             <button class="button" >{ "Turn to Gif" }</button>
-             <button class="button" >{ "Mute it" }</button>
-             <button onclick={ remove_sound } class="button" >{ "Extract sound" }</button>
+             <button class="button" onclick={ to_gif } >{ "Turn to Gif" }</button>
+             <button class="button" onclick={ remove_sound } >{ "Mute it" }</button>
+             <button onclick={ extract_sound } class="button" >{ "Extract sound" }</button>
              </span>
         </div>
     }
@@ -123,7 +178,7 @@ pub fn Detail(props: &Props) -> Html {
     web_sys::console::log_1(&props.name.to_string().into());
 
     let vid: Video = Video{id: 0, name: props.name.clone().into(),
-         path: "".to_string().into(), what: "".to_string().into(), url: props.url.clone().into() };
+         path: props.path.clone().into(), what: "".to_string().into(), url: props.url.clone().into() };
 
     html!{
         <>
