@@ -1,8 +1,7 @@
-#[macro_use]
 extern crate lazy_static;
-use common::*;
-use walkdir::WalkDir;
-use std::{ffi::OsStr, path::Path};
+//use common::*;
+//use walkdir::WalkDir;
+//use std::{ffi::OsStr, path::Path};
 use warp::{
     http::{header, Method},
     Filter, Rejection,
@@ -29,6 +28,11 @@ async fn main() {
     let archive = warp::path!("archive" / String)
         .and_then(solve::archive_video);
 
+    let soundout = warp::path!("soundout")
+        .and(warp::post())
+        .and(warp::body::json())
+        .and_then(solve::remove_video);
+
     let route = warp::method()
         .map(|method| {
             format!("You sent a {} request!", method)
@@ -39,6 +43,7 @@ async fn main() {
     .or(remove)
     .or(archive)
     .or(hello)
+    .or(soundout)
     .with(
         warp::cors()
             .allow_origin("http://localhost")

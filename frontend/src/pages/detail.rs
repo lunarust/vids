@@ -3,7 +3,7 @@ use gloo_net::http::Request;
 use wasm_bindgen_futures::spawn_local;
 use wasm_bindgen::{JsCast,UnwrapThrowExt};
 use crate::pages::video::Video;
-
+use common::*;
 
 #[derive(Clone, Debug, PartialEq, Eq, Properties)]
 pub struct Props {
@@ -21,7 +21,7 @@ pub struct VideoDetailsProps {
 
 #[component]
 fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
-
+    let message = use_state(|| "".to_string());
     web_sys::console::log_1(&"INIT :: ".into());
     web_sys::console::log_1(&video.name.to_string().into());
 
@@ -53,8 +53,12 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
     });
 
 
+
+   let vidname = arch_vid.name.clone();
+   let value = vidname.clone();
    let set_archive = Callback::from(move |_| {
-       let testurl = format!("http://bors.greece.local:9000/archive/{}", arch_vid.name);
+       let vidname = value.clone();
+       let testurl = format!("http://bors.greece.local:9000/archive/{}", vidname);
         web_sys::console::log_1(&"Hello World I want to archive :: ".into());
         web_sys::console::log_1(&arch_vid.name.to_string().into());
         spawn_local(async move {
@@ -66,6 +70,37 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
     }
     );
 
+
+   let remove_sound = Callback::from(move |_| {
+       let testurl = format!("http://bors.greece.local:9000/soundout");
+       let message = message.clone();
+
+//        web_sys::console::log_1(&"Hello World I want to archive :: ".into());
+//        web_sys::console::log_1(&arch_vid.name.to_string().into());
+
+        let vidname = vidname.clone();
+        let vidpath = arch_vid.path.clone();
+        spawn_local(async move {
+
+            let jsonbody = serde_json::json!(common::VideoRequest{
+                name: vidname.to_string(),
+                path: vidpath.to_string()});
+
+
+            let _ = Request::post(testurl.as_str())
+            .header("Content-Type", "application/json")
+            .body(jsonbody.to_string()).expect("DRAMA")
+            .send()
+            .await;
+            /*
+            match response {
+                Ok(resp) if resp.ok() => message.set(format!("OK").into()),
+                _ => message.set(format!("Failed {:?}", response).into()),
+            }*/
+
+        });
+    }
+    );
     html! {
         <div id="content">
              <iframe width="1100" height="840"
@@ -73,11 +108,11 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
             </iframe>
 
              <span id="action">
-             <button onclick={set_delete} class="button" >{ "Delete" }</button>
-             <button onclick={set_archive} class="button" >{ "Archive" }</button>
+             <button onclick={ set_delete } class="button" >{ "Delete" }</button>
+             <button onclick={ set_archive } class="button" >{ "Archive" }</button>
              <button class="button" >{ "Turn to Gif" }</button>
              <button class="button" >{ "Mute it" }</button>
-             <button class="button" >{ "Extract sound" }</button>
+             <button onclick={ remove_sound } class="button" >{ "Extract sound" }</button>
              </span>
         </div>
     }
@@ -93,7 +128,7 @@ pub fn Detail(props: &Props) -> Html {
     html!{
         <>
         <div id="content">
-           <h3> {">>"} { &props.name } {"<<"}</h3>
+           <h3> { &props.name } </h3>
                 <VideoDetails video={vid.clone()} />
         </div>
         </>

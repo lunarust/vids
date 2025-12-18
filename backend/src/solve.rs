@@ -1,11 +1,27 @@
 use walkdir::WalkDir;
-use std::{ffi::OsStr, path::Path};
-use serde::{Deserialize, Serialize};
+use std::{ffi::OsStr};
+//use serde::{Deserialize, Serialize};
 use warp::{http::StatusCode, reject, reply::json, Reply};
 use std::fs;
+use std::process::Command;
 
 use common::*;
 
+pub async fn extract_sound(body: VideoRequest) -> Result<impl Reply, warp::Rejection> {
+        println!("Extract sound: {:?}", body);
+        let cmd = format!("ffmpeg -i {} {}.mp3", body.path, body.name.replace("mp4", "mp3"));
+        runit(cmd);
+        Ok(StatusCode::OK)
+}
+async fn runit(cmd: String) -> Result<(), std::io::Error> {
+        Command::new("sh")
+        .arg("-c")
+        .arg(cmd)
+        .output()
+        .expect("failed to execute process")
+        ;
+    Ok(())
+}
 
 pub async fn remove_video(myvideo: String) -> Result<impl Reply, warp::Rejection> {
     println!("Preparing removal of file {}", myvideo);
@@ -14,7 +30,7 @@ pub async fn remove_video(myvideo: String) -> Result<impl Reply, warp::Rejection
         if entry.file_type().is_file() {
             let myfn = entry.path().file_name().unwrap();
             if myfn == myvideo.as_str() {
-                println!("THis is the file I want to remove: {:?}", entry);
+                println!("This is the file I want to remove: {:?}", entry);
 
                 fs::remove_file(entry.path());
             }

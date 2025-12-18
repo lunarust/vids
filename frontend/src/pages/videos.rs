@@ -2,17 +2,8 @@ use yew::prelude::*;
 use serde::Deserialize;
 use gloo_net::http::Request;
 use wasm_bindgen_futures::spawn_local;
-
+use crate::pages::video::Video;
 use crate::pages::detail::Detail;
-
-#[derive(Clone, PartialEq, Deserialize, Debug, Eq, Ord, PartialOrd)]
-struct Video {
-    id: usize,
-    name: AttrValue,
-    path: AttrValue,
-    what: AttrValue,
-    url: AttrValue,
-}
 
 #[derive(Properties, PartialEq)]
 struct ShowListProps {
@@ -50,7 +41,7 @@ pub fn Videos(props: &Props) -> Html {
     web_sys::console::log_1(&props.dir.to_string().into());
     let myvideo_name = use_state(|| "".to_string());
     let videos = use_state(|| vec![]);
-    let dir = use_state(|| props.dir.clone().to_string());
+    let dir_prop = use_state(|| props.dir.clone().to_string());
 
     let selected_video = use_state(|| None);
     let on_video_select = {
@@ -59,8 +50,8 @@ pub fn Videos(props: &Props) -> Html {
             selected_video.set(Some(video))
         })
     };
-
-
+    web_sys::console::log_1(&"Loading videos".into());
+    web_sys::console::log_1(&dir_prop.to_string().into());
 
     {
         let videos = videos.clone();
@@ -71,12 +62,12 @@ pub fn Videos(props: &Props) -> Html {
         let value = message.clone();
         let videosval = videos.clone();
         let tot_files_val = tot_files.clone();
-
+        let mydir = dir_prop.clone();
         use_effect_with((), move |_| {
             let mut fetched_videos: Vec<Video> = vec![];
             let myvideo_val = myvideo_val.clone();
             spawn_local(async move {
-                let response = Request::get("http://bors.greece.local:9000/list")
+                let response = Request::get(format!("http://bors.greece.local:9000/list/{}", dir_prop.to_string()).as_str())
                     .header("Content-Type", "application/json")
                     .send()
                     .await;
@@ -85,12 +76,14 @@ pub fn Videos(props: &Props) -> Html {
                             fetched_videos = resp.json().await.unwrap();
                             fetched_videos.sort_by_key(|d| d.name.clone());
                             tot_files_val.set(fetched_videos.len().to_string());
-                            myvideo_val.set(fetched_videos[0].clone().into());
-                            web_sys::console::log_1(&fetched_videos[0].name.to_string().into());
-                            value.set(format!("Success {:?} [{:?} videos available]", resp, fetched_videos.len()));
+                            if fetched_videos.len() > 0 {
+                                myvideo_val.set(fetched_videos[0].clone().into());
+                                web_sys::console::log_1(&fetched_videos[0].name.to_string().into());
+                            }
+                            value.set(format!("OK > {:?} {:?} [{:?} videos available]", dir_prop.to_string(), resp, fetched_videos.len()));
 
                         }
-                        _ => value.set(format!("Failed {:?}", response).into()),
+                        _ => value.set(format!("Failed {:?} {:?}", response, dir_prop.to_string()).into()),
                     }
                     videosval.set(fetched_videos);
 
@@ -122,23 +115,10 @@ pub fn Videos(props: &Props) -> Html {
         });
 
 
-        let dir = dir.clone();
-        let dir_value = dir.clone();
-        let toggle_dir = Callback::from(move|_| {
-            let mut dir_value = dir_value.clone();
-
-            if dir_value.to_string() == "raw".to_string() {
-                dir_value.set("archive".to_string().into());
-            }
-            else { dir_value.set("raw".to_string().into()); }
-
-
-        });
 
         html!{
             <>
             <div class="top">
-            <button class="button" onclick={ toggle_dir } >{ dir.to_string() }</button>
             <button class="button" onclick={ go_next } >{" >> "}</button>
             </div>
 

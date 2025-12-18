@@ -7,6 +7,7 @@ use yew_router::prelude::*;
 use crate::pages::home::Home;
 use crate::pages::videos::Videos;
 use crate::pages::page_not_found::PageNotFound;
+use crate::pages::nav::Nav;
 
 #[derive(Routable, PartialEq, Eq, Clone, Debug)]
 pub enum Route {
@@ -89,7 +90,8 @@ fn switch(routes: Route) -> Html {
             html! { <PageNotFound /> }
         }
         Route::Videos => {
-            html! { <Videos dir="raw" /> }
+            html! { <Nav />  }
+            //html! { <Videos dir="raw" /> }
         }
     }
 }
