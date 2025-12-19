@@ -5,7 +5,7 @@ use crate::pages::phone::Phone;
 #[function_component]
 pub fn Nav() -> Html {
     //let dir = use_state(|| "archive".to_string());
-    let dir = use_state(|| "backup".to_string());
+    let dir = use_state(|| "raw".to_string());
 
     let dir = dir.clone();
     let dir_value = dir.clone();
@@ -14,7 +14,7 @@ pub fn Nav() -> Html {
         let dir_value = dir_value.clone();
 
         match dir_value.as_str() {
-            "backup" =>  dir_value.set("backup".to_string().into()),
+            "raw" =>  dir_value.set("backup".to_string().into()),
              "backup" => dir_value.set("raw".to_string().into()),
              _ =>  dir_value.set("backup".to_string().into())
         }

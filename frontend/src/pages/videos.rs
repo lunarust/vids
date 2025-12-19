@@ -38,7 +38,7 @@ pub struct Props {
 pub fn Videos(props: &Props) -> Html {
     let message = use_state(|| "".to_string());
     let tot_files = use_state(|| "".to_string());
-    web_sys::console::log_1(&props.dir.to_string().into());
+    //web_sys::console::log_1(&props.dir.to_string().into());
     let myvideo_name = use_state(|| "".to_string());
     let videos = use_state(|| vec![]);
     let dir_prop = use_state(|| props.dir.clone().to_string());
@@ -50,8 +50,7 @@ pub fn Videos(props: &Props) -> Html {
             selected_video.set(Some(video))
         })
     };
-    web_sys::console::log_1(&"Loading videos".into());
-    //web_sys::console::log_1(&dir_prop.to_string().into());
+    //web_sys::console::log_1(&"Loading videos".into());
 
     {
         let videos = videos.clone();

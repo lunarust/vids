@@ -65,8 +65,8 @@ pub fn Phone() -> Html {
     }
     html!{
         <div id="mobile">
+            {"--"}<br />
             <MobilesList {mobiles} on_click={on_phone_click} />
-
         </div>
     }
 }
