@@ -10,22 +10,22 @@ use common::*;
 
 pub async fn extract_sound(body: VideoRequest) -> Result<impl Reply, warp::Rejection> {
         println!("Extract sound: {:?}", body);
-        let cmd = format!("ffmpeg -i {} {}", body.path, body.name.replace("mp4", "mp3"));
+        let cmd = format!("ffmpeg -i {} {}", body.path, body.path.replace(".mp4", ".mp3"));
         runit(cmd).await;
         Ok(StatusCode::OK)
 }
 
 pub async fn remove_sound(body: VideoRequest) -> Result<impl Reply, warp::Rejection> {
         println!("Remove sound: {:?}", body);
-        let cmd = format!("ffmpeg -i {} -c copy -an {}", body.path, body.name.replace("mp4", "mp3"));
+        let cmd = format!("ffmpeg -i {} -c copy -an {}", body.path, body.path.replace(".mp4", ".mp3"));
         runit(cmd).await;
         Ok(StatusCode::OK)
 }
 pub async fn to_gif(body: VideoRequest) -> Result<impl Reply, warp::Rejection> {
     println!("Create gif: {:?}", body);
-    let cmd = format!(r#"ffmpeg -i {} -vf 
+    let cmd = format!(r#"ffmpeg -i {} -vf
         "select='gt(trunc(t/2),trunc(prev_t/2))',setpts='PTS*0.1',scale=trunc(oh*a/2)*2:320:force_original_aspect_ratio=decrease,pad=trunc(oh*a/2)*2:320:-1:-1" -loop 0 -an {}.gif"#,
-        body.path, body.name.replace("mp4", "mp3")
+        body.path, body.path, body.path.replace(".mp4", ".mp3")
     );
 
     runit(cmd).await;
