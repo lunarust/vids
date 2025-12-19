@@ -15,7 +15,7 @@ The Backend is set on a raspberry pie to manage the videos and a small frontend 
 
 ## Web Interface
 
-![FrontEnd](/doc/FrontEnd.png)
+
 
 ## RunIt
 
