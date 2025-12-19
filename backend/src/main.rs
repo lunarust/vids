@@ -2,22 +2,16 @@ extern crate lazy_static;
 //use common::*;
 //use walkdir::WalkDir;
 //use std::{ffi::OsStr, path::Path};
-use warp::{
-    http::{header, Method},
-    Filter, Rejection
-};
+use warp::{http::{Method},Filter};
 //use warp::log;
 mod solve;
+mod error;
+
 
 #[tokio::main]
 async fn main() {
 
     println!("Good day ▼(´ᴥ`)▼ ");
-
-    //solve::return_list_video().await;
-
-    let hello = warp::path!("hello" / String)
-        .map(|name| format!("Hello, {}!", name));
 
     let list = warp::path!("list" / String)
         .and_then(solve::return_list_video);
@@ -52,6 +46,7 @@ async fn main() {
     .or(togif_route)
     .or(remove)
     .or(archive)
+    .recover(error::handle_rejection)
     .with(
         warp::cors()
             .allow_origin("http://localhost")
@@ -60,9 +55,6 @@ async fn main() {
                 Method::OPTIONS,
                 Method::GET,
                 Method::POST,
-                Method::DELETE,
-                Method::PUT,
-                Method::HEAD,
                 Method::DELETE,
             ])
             .allow_headers(vec!["allow_origin", "allow_any_origin", "Access-Control-Allow-Origin",

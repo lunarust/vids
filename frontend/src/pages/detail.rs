@@ -42,7 +42,7 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
    });
 
    let set_delete = Callback::from(move |_| {
-       let testurl = format!("http://bors.greece.local:9000/remove/{}", cloned_vid.name);
+       let testurl = format!("/api/v1/remove/{}", cloned_vid.name);
         web_sys::console::log_1(&"Hello World I want to remove :: ".into());
         web_sys::console::log_1(&cloned_vid.name.to_string().into());
         spawn_local(async move {
@@ -61,7 +61,7 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
    let value = vidname.clone();
    let set_archive = Callback::from(move |_| {
        let vidname = value.clone();
-       let testurl = format!("http://bors.greece.local:9000/archive/{}", vidname);
+       let testurl = format!("/api/v1/archive/{}", vidname);
         web_sys::console::log_1(&"Hello World I want to archive :: ".into());
         web_sys::console::log_1(&arch_vid.name.to_string().into());
         spawn_local(async move {
@@ -76,7 +76,7 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
    let valuename = vidname.clone();
    let valuepath = vidpath.clone();
    let extract_sound = Callback::from(move |_| {
-       let testurl = format!("http://bors.greece.local:9000/extractsound");
+       let testurl = format!("/api/v1/extractsound");
        //let message = message.clone();
 
         let vidname = valuename.clone();
@@ -105,7 +105,7 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
    let valuepath = vidpath.clone();
 
    let remove_sound = Callback::from(move |_| {
-       let testurl = format!("http://bors.greece.local:9000/soundout");
+       let testurl = format!("/api/v1/soundout");
        //let message = message.clone();
 
         let vidname = valuename.clone();
@@ -131,7 +131,7 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
     });
 
    let to_gif = Callback::from(move |_| {
-       let testurl = format!("http://bors.greece.local:9000/togif");
+       let testurl = format!("/api/v1/togif");
        let message = message.clone();
 
         let vidname = vidname.clone();

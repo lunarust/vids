@@ -67,7 +67,7 @@ pub fn Videos(props: &Props) -> Html {
             let mut fetched_videos: Vec<Video> = vec![];
             let myvideo_val = myvideo_val.clone();
             spawn_local(async move {
-                let response = Request::get(format!("http://bors.greece.local:9000/list/{}", dir_prop.to_string()).as_str())
+                let response = Request::get(format!("/api/v1/list/{}", dir_prop.to_string()).as_str())
                     .header("Content-Type", "application/json")
                     .send()
                     .await;
