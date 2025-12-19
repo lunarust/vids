@@ -21,8 +21,9 @@ curl -v --request OPTIONS 'http://localhost:9000' -H 'Origin: http://aetes.local
 
 
 
-> [!TIP] to check
-https://ssojet.com/parse-and-generate-formats/parse-and-generate-json-in-yew/
+> [!TIP]
+> check
+> https://ssojet.com/parse-and-generate-formats/parse-and-generate-json-in-yew/
 
 
 
