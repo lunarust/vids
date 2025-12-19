@@ -9,6 +9,7 @@ The Backend is set on a raspberry pie to manage the videos and a small frontend 
  - [ ] Filter videos
  - [ ] Docker Build and start not done.
 
+  [![Rust](https://github.com/lunarust/vids/blob/main/.github/workflows/rust.yml/badge.svg?branch=main)](https://github.com/lunarust/vids/blob/main/.github/workflows/rust.yml)
 
 ## Tests and other stuff:
   - Test CORS:
@@ -20,7 +21,7 @@ curl -v --request OPTIONS 'http://localhost:9000' -H 'Origin: http://aetes.local
 
 
 
->>> to check
+> [!TIP] to check
 https://ssojet.com/parse-and-generate-formats/parse-and-generate-json-in-yew/
 
 
