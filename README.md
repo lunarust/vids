@@ -9,7 +9,7 @@ The Backend is set on a raspberry pie to manage the videos and a small frontend 
  - [ ] Filter videos
  - [ ] Docker Build and start not done.
 
-  [![Rust](https://github.com/lunarust/vids/blob/main/.github/workflows/rust.yml/badge.svg?branch=main)](https://github.com/lunarust/vids/blob/main/.github/workflows/rust.yml)
+[![Rust](https://github.com/lunarust/vids/actions/workflows/rust.yml/badge.svg)](https://github.com/lunarust/vids/actions/workflows/rust.yml)
 
 ## Tests and other stuff:
   - Test CORS:
@@ -17,8 +17,6 @@ The Backend is set on a raspberry pie to manage the videos and a small frontend 
 ```bash
 curl -v --request OPTIONS 'http://localhost:9000' -H 'Origin: http://aetes.local' -H 'Access-Control-Request-Method: GET'
 ```
-
-
 
 
 > [!TIP]
