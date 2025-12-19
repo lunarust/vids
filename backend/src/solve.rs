@@ -45,37 +45,19 @@ async fn runit(cmd: String) -> Result<(), std::io::Error> {
     Ok(())
 }
 
-pub async fn remove_video(myvideo: String) -> Result<impl Reply, warp::Rejection> {
-    println!("Preparing removal of file {}", myvideo);
+pub async fn remove_video(body: VideoRequest) -> Result<impl Reply, warp::Rejection> {
+    println!("Preparing removal of file {}", body.name);
 
-    for entry in WalkDir::new("/opt/vids/raw").into_iter().filter_map(|e| e.ok()) {
-        if entry.file_type().is_file() {
-            let myfn = entry.path().file_name().unwrap();
-            if myfn == myvideo.as_str() {
-                println!("This is the file I want to remove: {:?}", entry);
-
-                let _ = fs::remove_file(entry.path());
-            }
-        }
-    }
+    let _ = fs::remove_file(body.path);
 
     Ok(StatusCode::OK)
 }
 
-pub async fn archive_video(myvideo: String) -> Result<impl Reply, warp::Rejection> {
-    println!("Preparing archiving of file {}", myvideo);
+pub async fn archive_video(body: VideoRequest) -> Result<impl Reply, warp::Rejection> {
+    println!("Preparing archiving of file {}", body.name);
+    let archive_path = format!("/opt/vids/backup/{}", body.name);
+    let _ = fs::rename(body.path, archive_path);
 
-    for entry in WalkDir::new("/opt/vids/raw/").into_iter().filter_map(|e| e.ok()) {
-        if entry.file_type().is_file() {
-            let myfn = entry.path().file_name().unwrap();
-            if myfn == myvideo.as_str() {
-                let dest = format!("/opt/vids/backup/{}", myvideo);
-                println!("This is the file I want to archiving: {:?} > to > {:?}", entry, dest);
-
-                let _ = fs::rename(entry.path(), dest);
-            }
-        }
-    }
 
     Ok(StatusCode::OK)
 }

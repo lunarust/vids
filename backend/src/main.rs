@@ -16,10 +16,14 @@ async fn main() {
     let list = warp::path!("list" / String)
         .and_then(solve::return_list_video);
 
-    let remove = warp::path!("remove" / String)
+    let remove = warp::path!("remove")
+        .and(warp::post())
+        .and(warp::body::json())
         .and_then(solve::remove_video);
 
-    let archive = warp::path!("archive" / String)
+    let archive = warp::path!("archive")
+        .and(warp::post())
+        .and(warp::body::json())
         .and_then(solve::archive_video);
 
     let soundout = warp::path!("soundout");

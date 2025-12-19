@@ -9,10 +9,8 @@ use common::*;
 
 #[derive(Clone, Debug, PartialEq, Eq, Properties)]
 pub struct Props {
-//    pub id: usize,
     pub name: AttrValue,
     pub path: String,
-//    pub what: String,
     pub url: String,
 }
 
@@ -41,99 +39,23 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
        }
    });
 
-   let set_delete = Callback::from(move |_| {
-       let testurl = format!("/api/v1/remove/{}", cloned_vid.name);
-        web_sys::console::log_1(&"Hello World I want to remove :: ".into());
-        web_sys::console::log_1(&cloned_vid.name.to_string().into());
-        spawn_local(async move {
-            let _ = Request::post(testurl.as_str())
-            .header("Content-Type", "application/json")
-            .send()
-            .await;
-        });
-        //newvideo = videos[video.id+1];
-    });
-
-
 
    let vidname = arch_vid.name.clone();
    let vidpath = arch_vid.path.clone();
    let value = vidname.clone();
-   let set_archive = Callback::from(move |_| {
-       let vidname = value.clone();
-       let testurl = format!("/api/v1/archive/{}", vidname);
-        web_sys::console::log_1(&"Hello World I want to archive :: ".into());
-        web_sys::console::log_1(&arch_vid.name.to_string().into());
-        spawn_local(async move {
-            let _ = Request::post(testurl.as_str())
-            .header("Content-Type", "application/json")
-            .send()
-            .await;
-        });
-    }
-    );
 
-   let valuename = vidname.clone();
-   let valuepath = vidpath.clone();
-   let extract_sound = Callback::from(move |_| {
-       let testurl = format!("/api/v1/extractsound");
-       //let message = message.clone();
+   let handle_file_click = Callback::from(move |action: &str| {
+       let mut testurl = format!("/api/v1/");
+       match action {
+           "gif" => testurl = format!("{}/togif", testurl),
+           "soundout" => testurl = format!("{}/soundout", testurl),
+           "extractsound" => testurl = format!("{}/extractsound", testurl),
+           "delete" => testurl = format!("{}/remove", testurl),
+           "archive"  => testurl = format!("{}/archive", testurl),
+           _ => testurl = format!("{}/donothing", testurl),
+       }
 
-        let vidname = valuename.clone();
-        let vidpath = valuepath.clone();
-        spawn_local(async move {
-            let vidreq: VideoRequest = common::VideoRequest{name: vidname.to_string(),path: vidpath.to_string()};
-
-            let jsonbody = serde_json::to_string(&vidreq).expect("Failed");
-
-            web_sys::console::log_1(&jsonbody.to_string().into());
-            let _ = Request::post(testurl.as_str())
-            .header("Content-Type", "application/json")
-            .body(jsonbody.to_string()).expect("DRAMA")
-            .send()
-            .await;
-            /*
-            match response {
-                Ok(resp) if resp.ok() => message.set(format!("OK").into()),
-                _ => message.set(format!("Failed {:?}", response).into()),
-            }*/
-
-        });
-    });
-
-   let valuename = vidname.clone();
-   let valuepath = vidpath.clone();
-
-   let remove_sound = Callback::from(move |_| {
-       let testurl = format!("/api/v1/soundout");
-       //let message = message.clone();
-
-        let vidname = valuename.clone();
-        let vidpath = valuepath.clone();
-        spawn_local(async move {
-            let vidreq: VideoRequest = common::VideoRequest{name: vidname.to_string(),path: vidpath.to_string()};
-
-            let jsonbody = serde_json::to_string(&vidreq).expect("Failed");
-
-            web_sys::console::log_1(&jsonbody.to_string().into());
-            let _ = Request::post(testurl.as_str())
-            .header("Content-Type", "application/json")
-            .body(jsonbody.to_string()).expect("DRAMA")
-            .send()
-            .await;
-            /*
-            match response {
-                Ok(resp) if resp.ok() => message.set(format!("OK").into()),
-                _ => message.set(format!("Failed {:?}", response).into()),
-            }*/
-
-        });
-    });
-
-   let to_gif = Callback::from(move |_| {
-       let testurl = format!("/api/v1/togif");
-       let message = message.clone();
-
+        let message = message.clone();
         let vidname = vidname.clone();
         let vidpath = vidpath.clone();
         spawn_local(async move {
@@ -156,6 +78,11 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
         });
     });
 
+    let value_soundout = handle_file_click.clone();
+    let value_extractsound = handle_file_click.clone();
+    let value_delete = handle_file_click.clone();
+    let value_archive = handle_file_click.clone();
+
     html! {
         <div id="content">
              <iframe width="1100" height="840"
@@ -163,11 +90,12 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
             </iframe>
 
              <span id="action">
-             <button onclick={ set_delete } class="button" >{ "Delete" }</button>
-             <button onclick={ set_archive } class="button" >{ "Archive" }</button>
-             <button class="button" onclick={ to_gif } >{ "Turn to Gif" }</button>
-             <button class="button" onclick={ remove_sound } >{ "Mute it" }</button>
-             <button onclick={ extract_sound } class="button" >{ "Extract sound" }</button>
+                 <button onclick={ move |_|{ handle_file_click.emit("gif");}} class="button">{ "Gif it" }</button>
+                 <button onclick={ move |_|{ value_soundout.emit("soundout");}} class="button">{ "Mute it" }</button>
+                 <button onclick={ move |_|{ value_extractsound.emit("extractsound");}} class="button">{ "Extract sound" }</button>
+                 <br />{ "--" }<br />
+                 <button onclick={ move |_|{ value_archive.emit("archive");}} class="button">{ "Archive" }</button>
+                 <button onclick={ move |_|{ value_delete.emit("delete");}} class="button">{ "Delete" }</button>
              </span>
         </div>
     }
