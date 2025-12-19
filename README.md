@@ -8,8 +8,27 @@ The Backend is set on a raspberry pie to manage the videos and a small frontend 
  - [ ] Style...
  - [ ] Filter videos
  - [ ] Docker Build and start not done.
+ - [ ] Load videos directly, or change home to add a link
 
 [![Rust](https://github.com/lunarust/vids/actions/workflows/rust.yml/badge.svg)](https://github.com/lunarust/vids/actions/workflows/rust.yml)
+
+
+## Web Interface
+
+![FrontEnd](/doc/FrontEnd.png)
+
+## RunIt
+
+### Backend
+```bash
+make dev
+```
+### Frontend
+```bash
+trunk serve
+```
+
+
 
 ## Tests and other stuff:
   - Test CORS:

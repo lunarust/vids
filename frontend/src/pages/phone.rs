@@ -36,8 +36,8 @@ fn MobilesList(MobilesListProps { mobiles, on_click }: &MobilesListProps) -> Htm
 #[function_component]
 pub fn Phone() -> Html {
     let mobiles = vec![
-        Mobile {name: "Lg".to_string(), ip: "192.168.1.230".to_string()},
-        Mobile {name: "One".to_string(), ip: "192.168.1.208".to_string()},
+        Mobile {name: "K61".to_string(), ip: "192.168.1.230".to_string()},
+        Mobile {name: "Redmi".to_string(), ip: "192.168.1.208".to_string()},
     ];
     //let args = ["".to_string(), "".to_string()];
     let selected_mobile = use_state(|| None);
