@@ -1,5 +1,6 @@
 use yew::prelude::*;
 use crate::pages::videos::Videos;
+use crate::pages::phone::Phone;
 
 #[function_component]
 pub fn Nav() -> Html {
@@ -45,6 +46,8 @@ pub fn Nav() -> Html {
                 */
                 <Videos dir={ directory.clone() } />
             }
+
+            <Phone />
         </>
     }
 }

@@ -16,6 +16,12 @@ async fn main() {
     let list = warp::path!("list" / String)
         .and_then(solve::return_list_video);
 
+    let fetch = warp::path!("fetch" / String)
+        .and_then(solve::fetch_from_phone);
+
+    let clean = warp::path!("clean" / String)
+        .and_then(solve::clean_phone);
+
     let remove = warp::path!("remove")
         .and(warp::post())
         .and(warp::body::json())
@@ -50,6 +56,8 @@ async fn main() {
     .or(togif_route)
     .or(remove)
     .or(archive)
+    .or(fetch)
+    .or(clean)
     .recover(error::handle_rejection)
     .with(
         warp::cors()

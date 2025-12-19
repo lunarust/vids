@@ -4,7 +4,7 @@ use wasm_bindgen_futures::spawn_local;
 use wasm_bindgen::{JsCast,UnwrapThrowExt};
 use crate::pages::video::Video;
 
-use serde::Serialize;
+//use serde::Serialize;
 use common::*;
 
 #[derive(Clone, Debug, PartialEq, Eq, Properties)]
@@ -25,7 +25,7 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
     web_sys::console::log_1(&"INIT :: ".into());
     web_sys::console::log_1(&video.name.to_string().into());
 
-   let cloned_vid = video.clone();
+   //let cloned_vid = video.clone();
    //let newvideo = video.clone();
    let arch_vid = video.clone();
    let _oninput = Callback::from({
@@ -42,7 +42,7 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
 
    let vidname = arch_vid.name.clone();
    let vidpath = arch_vid.path.clone();
-   let value = vidname.clone();
+   //let value = vidname.clone();
 
    let handle_file_click = Callback::from(move |action: &str| {
        let mut testurl = format!("/api/v1/");
@@ -55,7 +55,7 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
            _ => testurl = format!("{}/donothing", testurl),
        }
 
-        let message = message.clone();
+        let _message = message.clone();
         let vidname = vidname.clone();
         let vidpath = vidpath.clone();
         spawn_local(async move {
@@ -90,6 +90,7 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
             </iframe>
 
              <span id="action">
+                <span class="title">{ "Actions: " }</span>
                  <button onclick={ move |_|{ handle_file_click.emit("gif");}} class="button">{ "Gif it" }</button>
                  <button onclick={ move |_|{ value_soundout.emit("soundout");}} class="button">{ "Mute it" }</button>
                  <button onclick={ move |_|{ value_extractsound.emit("extractsound");}} class="button">{ "Extract sound" }</button>
@@ -110,10 +111,8 @@ pub fn Detail(props: &Props) -> Html {
 
     html!{
         <>
-        <div id="content">
-           <h3> { &props.name } </h3>
+          // <h3> { &props.name } </h3>
                 <VideoDetails video={vid.clone()} />
-        </div>
         </>
     }
 

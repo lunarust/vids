@@ -29,6 +29,23 @@ pub async fn to_gif(body: VideoRequest) -> Result<impl Reply, warp::Rejection> {
     let _ = runit(cmd).await;
     Ok(StatusCode::OK)
 }
+pub async fn fetch_from_phone(phone: String) -> Result<impl Reply, warp::Rejection> {
+    println!("Fetch videos: {:?}", phone);
+    let cmd = format!("cd /opt/scripts/ && ./fetch_videos.sh true {}", phone);
+
+    let _ = runit(cmd).await;
+
+
+
+    Ok(StatusCode::OK)
+}
+pub async fn clean_phone(phone: String) -> Result<impl Reply, warp::Rejection> {
+    println!("Fetch videos: {:?}", phone);
+    let cmd = format!("cd /opt/scripts/ && ./fetch_videos.sh true {}", phone);
+
+    let _ = runit(cmd).await;
+    Ok(StatusCode::OK)
+}
 
 async fn runit(cmd: String) -> Result<(), std::io::Error> {
     println!("Running command: {:?}", cmd);

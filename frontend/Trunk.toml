@@ -8,4 +8,5 @@ port = 8000
 
 [[proxy]]
 rewrite = "/api/v1/"
-backend = "http://bors.greece.local:9000/"
+# backend = "http://bors.greece.local:9000/"
+backend = "http://localhost:9000/"

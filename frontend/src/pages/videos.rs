@@ -1,5 +1,5 @@
 use yew::prelude::*;
-use serde::Deserialize;
+//use serde::Deserialize;
 use gloo_net::http::Request;
 use wasm_bindgen_futures::spawn_local;
 use crate::pages::video::Video;
@@ -51,7 +51,7 @@ pub fn Videos(props: &Props) -> Html {
         })
     };
     web_sys::console::log_1(&"Loading videos".into());
-    web_sys::console::log_1(&dir_prop.to_string().into());
+    //web_sys::console::log_1(&dir_prop.to_string().into());
 
     {
         let videos = videos.clone();
@@ -62,7 +62,7 @@ pub fn Videos(props: &Props) -> Html {
         let value = message.clone();
         let videosval = videos.clone();
         let tot_files_val = tot_files.clone();
-        let mydir = dir_prop.clone();
+        let _mydir = dir_prop.clone();
         use_effect_with((), move |_| {
             let mut fetched_videos: Vec<Video> = vec![];
             let myvideo_val = myvideo_val.clone();
@@ -86,8 +86,6 @@ pub fn Videos(props: &Props) -> Html {
                         _ => value.set(format!("Failed {:?} {:?}", response, dir_prop.to_string()).into()),
                     }
                     videosval.set(fetched_videos);
-
-
             });
 
             || {}
@@ -98,34 +96,41 @@ pub fn Videos(props: &Props) -> Html {
         let videos_list = videos.clone();
         let selected_video_next = selected_video.clone();
 
-        let go_next = Callback::from(move |_| {
+        let go_next = Callback::from(move |direction: &str| {
             let videos_list_val = videos_list.clone();
             let mut index = 0;
             if let Some(video) = &*selected_video_next {
                 let n = &*video.name;
-                index = videos_list.iter().position(|r| r.name == n).unwrap()+1;
-                //web_sys::console::log_1(&"I use selected video".into());
+                match direction {
+                    "next" => index = videos_list.iter().position(|r| r.name == n).unwrap()+1,
+                    "prev" => index = videos_list.iter().position(|r| r.name == n).unwrap()-1,
+                    _ => index = videos_list.iter().position(|r| r.name == n).unwrap()+1,
+                }
             }
             else {
                 index = videos_list.iter().position(|r| r.name == &next_video_name.to_string()).unwrap()+1;
-                //web_sys::console::log_1(&"I use default video".into());
            }
            selected_video_next.set(Some(videos_list_val[index].clone()));
            //web_sys::console::log_1(&index.to_string().into());
         });
 
-
+        let value_gonext = go_next.clone();
 
         html!{
             <>
-            <div class="top">
-            <button class="button" onclick={ go_next } >{" >> "}</button>
-            </div>
+
 
             <ShowList videos={(*videos).clone()} on_click={on_video_select} />
 
 
             if let Some(video) = &*selected_video {
+
+                <div class="top">
+                <button class="button" onclick={ { move |_|{ go_next.emit("prev");}} } >{" << "}</button>
+                <span class="title">{ video.name.to_string() }</span>
+                <button class="button" onclick={ { move |_|{ value_gonext.emit("next");}} } >{" >> "}</button>
+                </div>
+
                 <Detail name={ video.name.to_string() } url={ video.url.to_string() } path={ video.path.to_string() } />
             }
 

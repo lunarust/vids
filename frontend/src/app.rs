@@ -5,7 +5,7 @@ use yew_router::history::{AnyHistory, History, MemoryHistory};
 use yew_router::prelude::*;
 
 use crate::pages::home::Home;
-use crate::pages::videos::Videos;
+//use crate::pages::videos::Videos;
 use crate::pages::page_not_found::PageNotFound;
 use crate::pages::nav::Nav;
 

@@ -11,6 +11,8 @@ pub fn Home() -> Html {
                 </div>
             </div>
 
+            
+
             <div class="tile is-child">
                 <figure class="image is-3by1">
                     <img alt="A random image for the input term 'yew'." src="https://source.unsplash.com/random/1200x400/?yew" />
