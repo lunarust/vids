@@ -1,0 +1,18 @@
+#!/usr/bin/python3.10
+
+import http.server
+import socketserver
+
+PORT = 8000
+ADDR = '0.0.0.0'
+
+Handler = http.server.SimpleHTTPRequestHandler
+Handler.extensions_map.update({
+    '.wasm': 'application/wasm',
+})
+
+socketserver.TCPServer.allow_reuse_address = True
+with socketserver.TCPServer((ADDR, PORT), Handler) as httpd:
+    httpd.allow_reuse_address = True
+    print("serving at port", PORT)
+    httpd.serve_forever()

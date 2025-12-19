@@ -1,54 +1,91 @@
 use walkdir::WalkDir;
-use std::{ffi::OsStr, path::Path};
-use serde::{Deserialize, Serialize};
-use warp::{http::StatusCode, reject, reply::json, Reply};
+use std::{ffi::OsStr};
+use warp::{http::StatusCode, reply::json, Reply};
 use std::fs;
+use std::process::Command;
+//use std::fmt::format;
 
 use common::*;
 
+pub async fn extract_sound(body: VideoRequest) -> Result<impl Reply, warp::Rejection> {
+        println!("Extract sound: {:?}", body);
+        let cmd = format!("ffmpeg -i {} {}", body.path, body.path.replace(".mp4", ".mp3"));
+        let _ = runit(cmd).await;
+        Ok(StatusCode::OK)
+}
 
-pub async fn remove_video(myvideo: String) -> Result<impl Reply, warp::Rejection> {
-    println!("Preparing removal of file {}", myvideo);
+pub async fn remove_sound(body: VideoRequest) -> Result<impl Reply, warp::Rejection> {
+        println!("Remove sound: {:?}", body);
+        let cmd = format!("ffmpeg -i {} -c copy -an {}", body.path, body.path.replace(".mp4", ".mp3"));
+        let _ = runit(cmd).await;
+        Ok(StatusCode::OK)
+}
+pub async fn to_gif(body: VideoRequest) -> Result<impl Reply, warp::Rejection> {
+    println!("Create gif: {:?}", body);
+    let cmd = format!(r#"ffmpeg -i {} -vf "select='gt(trunc(t/2),trunc(prev_t/2))',setpts='PTS*0.1',scale=trunc(oh*a/2)*2:320:force_original_aspect_ratio=decrease,pad=trunc(oh*a/2)*2:320:-1:-1" -loop 0 -an {}"#,
+        body.path, body.path.replace(".mp4", ".gif")
+    );
 
-    for entry in WalkDir::new("/opt/vids/raw").into_iter().filter_map(|e| e.ok()) {
-        if entry.file_type().is_file() {
-            let myfn = entry.path().file_name().unwrap();
-            if myfn == myvideo.as_str() {
-                println!("THis is the file I want to remove: {:?}", entry);
+    let _ = runit(cmd).await;
+    Ok(StatusCode::OK)
+}
+pub async fn fetch_from_phone(phone: String) -> Result<impl Reply, warp::Rejection> {
+    println!("Fetch videos: {:?}", phone);
+    let cmd = format!("cd /opt/scripts/ && ./fetch_videos.sh true {}", phone);
 
-                fs::remove_file(entry.path());
-            }
-        }
-    }
+    let _ = runit(cmd).await;
+
+
+
+    Ok(StatusCode::OK)
+}
+pub async fn clean_phone(phone: String) -> Result<impl Reply, warp::Rejection> {
+    println!("Fetch videos: {:?}", phone);
+    let cmd = format!("cd /opt/scripts/ && ./fetch_videos.sh true {}", phone);
+
+    let _ = runit(cmd).await;
+    Ok(StatusCode::OK)
+}
+
+async fn runit(cmd: String) -> Result<(), std::io::Error> {
+    println!("Running command: {:?}", cmd);
+        let output = Command::new("sh")
+        .arg("-c")
+        .arg(cmd)
+        .output()
+        .unwrap()
+        //.expect("failed to execute process")
+        ;
+    let stdout = String::from_utf8(output.stdout).unwrap();
+
+    println!("{}", stdout);
+    Ok(())
+}
+
+pub async fn remove_video(body: VideoRequest) -> Result<impl Reply, warp::Rejection> {
+    println!("Preparing removal of file {}", body.name);
+
+    let _ = fs::remove_file(body.path);
 
     Ok(StatusCode::OK)
 }
 
-pub async fn archive_video(myvideo: String) -> Result<impl Reply, warp::Rejection> {
-    println!("Preparing archiving of file {}", myvideo);
+pub async fn archive_video(body: VideoRequest) -> Result<impl Reply, warp::Rejection> {
+    println!("Preparing archiving of file {}", body.name);
+    let archive_path = format!("/opt/vids/backup/{}", body.name);
+    let _ = fs::rename(body.path, archive_path);
 
-    for entry in WalkDir::new("/opt/vids/raw/").into_iter().filter_map(|e| e.ok()) {
-        if entry.file_type().is_file() {
-            let myfn = entry.path().file_name().unwrap();
-            if myfn == myvideo.as_str() {
-                let dest = format!("/opt/vids/backup/{}", myvideo);
-                println!("This is the file I want to remove: {:?} > to > {:?}", entry, dest);
-
-                fs::rename(entry.path(), dest);
-            }
-        }
-    }
 
     Ok(StatusCode::OK)
 }
 
-pub async fn return_list_video() -> Result<impl Reply, warp::Rejection> {
+pub async fn return_list_video(dir: String) -> Result<impl Reply, warp::Rejection> {
   println!("Fetching list of available videos");
 
   let mut count = 0;
   //let myPath: WalkDir::new("/home/rust/vids/");
   let mut videos: Vec<Video> = vec![];
-  for entry in WalkDir::new("/opt/vids/raw/").into_iter().filter_map(|e| e.ok()) {
+  for entry in WalkDir::new(format!("/opt/vids/{}/", dir)).into_iter().filter_map(|e| e.ok()) {
       if entry.file_type().is_file() {
           count +=1;
           let path = entry.path();
@@ -91,8 +128,4 @@ pub async fn return_list_video() -> Result<impl Reply, warp::Rejection> {
         &videos.into_iter().map(Video::of).collect(),
     ))
 
-}
-pub async fn handle_rejection(value: String) -> Result<impl Reply, warp::Rejection> {
-    println!("Rejecting this {}", value);
-    Ok(warp::reply::with_status("OK", StatusCode::OK))
 }
