@@ -84,14 +84,14 @@ pub fn ServerApp(props: &ServerAppProps) -> Html {
 fn switch(routes: Route) -> Html {
     match routes {
         Route::Home => {
-            html! { <Home /> }
+            html! { <Nav /> }
         }
         Route::NotFound => {
             html! { <PageNotFound /> }
         }
         Route::Videos => {
-            html! { <Nav />  }
-            //html! { <Videos dir="raw" /> }
+            //html! { <Videos />  }
+            html! { <Home /> }
         }
     }
 }

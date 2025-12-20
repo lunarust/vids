@@ -2,9 +2,8 @@ use yew::prelude::*;
 use gloo_net::http::Request;
 use wasm_bindgen_futures::spawn_local;
 use wasm_bindgen::{JsCast,UnwrapThrowExt};
-use crate::pages::video::Video;
+//use crate::pages::video::Video;
 
-//use serde::Serialize;
 use common::*;
 
 #[derive(Clone, Debug, PartialEq, Eq, Properties)]
@@ -21,12 +20,9 @@ pub struct VideoDetailsProps {
 
 #[component]
 fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
-    let message = use_state(|| "".to_string());
-    web_sys::console::log_1(&"INIT :: ".into());
-    web_sys::console::log_1(&video.name.to_string().into());
-
-   //let cloned_vid = video.clone();
-   //let newvideo = video.clone();
+   let message = use_state(|| "".to_string());
+    //web_sys::console::log_1(&"INIT :: ".into());
+    //web_sys::console::log_1(&video.name.to_string().into());
    let arch_vid = video.clone();
    let _oninput = Callback::from({
        move |input_event: InputEvent| {
@@ -42,7 +38,6 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
 
    let vidname = arch_vid.name.clone();
    let vidpath = arch_vid.path.clone();
-   //let value = vidname.clone();
 
    let handle_file_click = Callback::from(move |action: &str| {
        let mut testurl = format!("/api/v1/");
@@ -88,8 +83,8 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
              <iframe width="1100" height="840"
                 src={ video.url.clone() }>
             </iframe>
-
              <span id="action">
+             <hr /><br />
                 <span class="title">{ "Actions: " }</span>
                  <button onclick={ move |_|{ handle_file_click.emit("gif");}} class="button">{ "Gif it" }</button>
                  <button onclick={ move |_|{ value_soundout.emit("soundout");}} class="button">{ "Mute it" }</button>
@@ -106,13 +101,12 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
 pub fn Detail(props: &Props) -> Html {
     web_sys::console::log_1(&props.name.to_string().into());
 
-    let vid: Video = Video{id: 0, name: props.name.clone().into(),
-         path: props.path.clone().into(), what: "".to_string().into(), url: props.url.clone().into() };
+    let vid: Video = Video{id: 0, name: props.name.to_string(),
+         path: props.path.clone().into(), url: props.url.clone().into(), archived: false };
 
     html!{
         <>
-          // <h3> { &props.name } </h3>
-                <VideoDetails video={vid.clone()} />
+            <VideoDetails video={vid.clone()} />
         </>
     }
 

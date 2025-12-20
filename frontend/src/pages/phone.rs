@@ -65,8 +65,11 @@ pub fn Phone() -> Html {
     }
     html!{
         <div id="mobile">
-            {"--"}<br />
+        <hr /><br />
+            <span class="title">{ "Phones" }</span>
+            <br />{"--"}<br />
             <MobilesList {mobiles} on_click={on_phone_click} />
+        <hr />
         </div>
     }
 }

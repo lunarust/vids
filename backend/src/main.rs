@@ -13,7 +13,7 @@ async fn main() {
 
     println!("Good day ▼(´ᴥ`)▼ ");
 
-    let list = warp::path!("list" / String)
+    let list = warp::path!("list")
         .and_then(solve::return_list_video);
 
     let fetch = warp::path!("fetch" / String)
