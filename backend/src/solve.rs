@@ -3,7 +3,6 @@ use std::{ffi::OsStr};
 use warp::{http::StatusCode, reply::json, Reply};
 use std::fs;
 use std::process::Command;
-//use std::fmt::format;
 
 use common::*;
 
@@ -35,8 +34,6 @@ pub async fn fetch_from_phone(phone: String) -> Result<impl Reply, warp::Rejecti
 
     let _ = runit(cmd).await;
 
-
-
     Ok(StatusCode::OK)
 }
 pub async fn clean_phone(phone: String) -> Result<impl Reply, warp::Rejection> {
@@ -54,7 +51,6 @@ async fn runit(cmd: String) -> Result<(), std::io::Error> {
         .arg(cmd)
         .output()
         .unwrap()
-        //.expect("failed to execute process")
         ;
     let stdout = String::from_utf8(output.stdout).unwrap();
 
@@ -75,55 +71,31 @@ pub async fn archive_video(body: VideoRequest) -> Result<impl Reply, warp::Rejec
     let archive_path = format!("/opt/vids/backup/{}", body.name);
     let _ = fs::rename(body.path, archive_path);
 
-
     Ok(StatusCode::OK)
 }
 
-pub async fn return_list_video(dir: String) -> Result<impl Reply, warp::Rejection> {
+pub async fn return_list_video() -> Result<impl Reply, warp::Rejection> {
   println!("Fetching list of available videos");
-
   let mut count = 0;
   //let myPath: WalkDir::new("/home/rust/vids/");
   let mut videos: Vec<Video> = vec![];
-  for entry in WalkDir::new(format!("/opt/vids/{}/", dir)).into_iter().filter_map(|e| e.ok()) {
+  for entry in WalkDir::new(format!("/opt/vids/")).into_iter().filter_map(|e| e.ok()) {
       if entry.file_type().is_file() {
           count +=1;
+          let mut is_archived = false;
           let path = entry.path();
-          if let Some(extension) = path.extension().and_then(OsStr::to_str) {
-              match extension {
-                  "mp4" =>
-                      videos.push(
-                          Video {
-                              id: count, name: path.file_name().unwrap().to_str().expect("plop").to_string(),
-                              path: path.display().to_string(),
-                              what: "video".to_string(),
-                              url: path.display().to_string().replace("/opt/vids", "http://bors.greece.local/vids")
-                          }),
-                  "png" =>
-                      videos.push(
-                          Video {
-                              id: count, name: path.file_name().unwrap().to_str().expect("plop").to_string(),
-                              path: path.display().to_string(),
-                              what: "picture".to_string(),
-                              url: path.display().to_string().replace("/opt/vids", "http://bors.greece.local/vids")
-                          }),
+          if path.display().to_string().as_str().starts_with("/opt/vids/backup/") { is_archived = true; }
+          videos.push(
+              Video {
+                  id: count, name: path.file_name().unwrap().to_str().expect("plop").to_string(),
+                  path: path.display().to_string(),
+                  url: path.display().to_string().replace("/opt/vids", "http://bors.greece.local/vids"),
+                  archived: is_archived
+          });
+      }}
 
-                  "gif" =>
-                      videos.push(
-                          Video {
-                              id: count, name: path.file_name().unwrap().to_str().expect("plop").to_string(),
-                              path: path.display().to_string(),
-                              what: "animation".to_string(),
-                              url: path.display().to_string().replace("/opt/vids", "http://bors.greece.local/vids")
-                          }),
-                  _ => (),
-              }
-          }
-      }
-  }
 
     println!("Found {} files", count);
-//    println!("{:?}", videos);
     Ok(json::<Vec<_>>(
         &videos.into_iter().map(Video::of).collect(),
     ))

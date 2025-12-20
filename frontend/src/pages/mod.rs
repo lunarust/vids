@@ -4,5 +4,3 @@ pub mod videos;
 pub mod detail;
 pub mod nav;
 pub mod phone;
-
-pub mod video;

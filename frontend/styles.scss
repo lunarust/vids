@@ -61,7 +61,7 @@ iframe {
   align-items: center;
   align: center;
   text-align: center;
-  padding: 30px;
+  padding: 20px;
 }
 #iframe {
   top: 0px;
@@ -76,7 +76,7 @@ iframe {
   align-items: center;
   align: center;
   text-align: center;
-  padding: 30px;
+  padding: 20px;
   line-height: 20px;
   flex-direction: column;
 }
@@ -109,6 +109,18 @@ iframe {
 .menu_item {
   padding: 0px;
   marging: 0px;
+  cursor: pointer;
+}
+.menu_item_true {
+  padding: 0px;
+  marging: 0px;
+  color: #6a747a;
+  cursor: pointer;
+}
+.menu_item_false {
+  padding: 0px;
+  marging: 0px;
+  color: #36454F;
   cursor: pointer;
 }
 .watermark {

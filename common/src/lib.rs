@@ -1,14 +1,12 @@
 use serde::{Deserialize, Serialize};
 
-
-
-#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Debug, Eq)]
 pub struct Video {
     pub id: i32,
     pub name: String,
     pub path: String,
-    pub what: String,
     pub url: String,
+    pub archived: bool,
 }
 
 
@@ -18,8 +16,8 @@ impl Video {
             id: video.id,
             name: video.name,
             path: video.path,
-            what: video.what,
             url: video.url,
+            archived: video.archived,
         }
     }
 }
