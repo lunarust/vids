@@ -4,17 +4,15 @@ use yew::prelude::*;
 use yew_router::history::{AnyHistory, History, MemoryHistory};
 use yew_router::prelude::*;
 
-use crate::pages::home::Home;
+//use crate::pages::home::Home;
 //use crate::pages::videos::Videos;
 use crate::pages::page_not_found::PageNotFound;
-use crate::pages::nav::Nav;
+use crate::pages::loading::Loading;
 
 #[derive(Routable, PartialEq, Eq, Clone, Debug)]
 pub enum Route {
     #[at("/")]
     Home,
-    #[at("/videos")]
-    Videos,
     #[not_found]
     #[at("/404")]
     NotFound,
@@ -84,14 +82,10 @@ pub fn ServerApp(props: &ServerAppProps) -> Html {
 fn switch(routes: Route) -> Html {
     match routes {
         Route::Home => {
-            html! { <Nav /> }
+            html! { <Loading /> }
         }
         Route::NotFound => {
             html! { <PageNotFound /> }
-        }
-        Route::Videos => {
-            //html! { <Videos />  }
-            html! { <Home /> }
         }
     }
 }

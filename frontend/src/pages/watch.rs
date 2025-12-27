@@ -1,16 +1,12 @@
 use yew::prelude::*;
 use gloo_net::http::Request;
 use wasm_bindgen_futures::spawn_local;
-use wasm_bindgen::{JsCast,UnwrapThrowExt};
-//use crate::pages::video::Video;
 
 use common::*;
 
 #[derive(Clone, Debug, PartialEq, Eq, Properties)]
 pub struct Props {
-    pub name: AttrValue,
-    pub path: String,
-    pub url: String,
+    pub vid: Video,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Properties)]
@@ -20,20 +16,9 @@ pub struct VideoDetailsProps {
 
 #[component]
 fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
-   let message = use_state(|| "".to_string());
-    //web_sys::console::log_1(&"INIT :: ".into());
-    //web_sys::console::log_1(&video.name.to_string().into());
+   //let _message = use_state(|| "".to_string());
+
    let arch_vid = video.clone();
-   let _oninput = Callback::from({
-       move |input_event: InputEvent| {
-           let target: web_sys::HtmlInputElement = input_event
-           .target()
-           .unwrap_throw()
-           .dyn_into()
-           .unwrap_throw();
-           web_sys::console::log_1(&target.value().into());
-       }
-   });
 
 
    let vidname = arch_vid.name.clone();
@@ -50,7 +35,7 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
            _ => testurl = format!("{}/donothing", testurl),
        }
 
-        let _message = message.clone();
+        //let _message = message.clone();
         let vidname = vidname.clone();
         let vidpath = vidpath.clone();
         spawn_local(async move {
@@ -58,17 +43,12 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
 
             let jsonbody = serde_json::to_string(&vidreq).expect("Failed");
 
-            web_sys::console::log_1(&jsonbody.to_string().into());
+            //web_sys::console::log_1(&jsonbody.to_string().into());
             let _ = Request::post(testurl.as_str())
             .header("Content-Type", "application/json")
             .body(jsonbody.to_string()).expect("DRAMA")
             .send()
             .await;
-            /*
-            match response {
-                Ok(resp) if resp.ok() => message.set(format!("OK").into()),
-                _ => message.set(format!("Failed {:?}", response).into()),
-            }*/
 
         });
     });
@@ -84,13 +64,13 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
                 src={ video.url.clone() }>
             </iframe>
              <span id="action">
-             <hr /><br />
+             <br />
                 <span class="title">{ "Actions: " }</span>
                  <button onclick={ move |_|{ handle_file_click.emit("gif");}} class="button">{ "Gif it" }</button>
                  <button onclick={ move |_|{ value_soundout.emit("soundout");}} class="button">{ "Mute it" }</button>
                  <button onclick={ move |_|{ value_extractsound.emit("extractsound");}} class="button">{ "Extract sound" }</button>
                  <br />{ "--" }<br />
-                 <button onclick={ move |_|{ value_archive.emit("archive");}} class="button">{ "Archive" }</button>
+                 <button onclick={ move |_|{ value_archive.emit("archive");}} disabled={arch_vid.archived} class="button">{ "Archive" }</button>
                  <button onclick={ move |_|{ value_delete.emit("delete");}} class="button">{ "Delete" }</button>
              </span>
         </div>
@@ -98,16 +78,13 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
 }
 
 #[function_component]
-pub fn Detail(props: &Props) -> Html {
-    web_sys::console::log_1(&props.name.to_string().into());
+pub fn Watch(props: &Props) -> Html {
+    web_sys::console::log_1(&props.vid.name.to_string().into());
 
-    let vid: Video = Video{id: 0, name: props.name.to_string(),
-         path: props.path.clone().into(), url: props.url.clone().into(), archived: false };
-
+    let vid = &props.vid;
     html!{
         <>
             <VideoDetails video={vid.clone()} />
         </>
     }
-
 }

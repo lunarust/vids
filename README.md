@@ -11,6 +11,7 @@ The Backend is set on a raspberry pie to manage the videos and a small frontend 
  - [X] Load videos directly, or change home to add a link
  - [ ] Backend url build is static, must change that, we can also build the link in the FE
  - [X] BE change file types into enum & push to vector.
+ - [ ] Disable next & prev button for boundaries indexes
 
 [![Rust](https://github.com/lunarust/vids/actions/workflows/rust.yml/badge.svg)](https://github.com/lunarust/vids/actions/workflows/rust.yml)
 
