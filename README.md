@@ -4,9 +4,9 @@
 The Backend is set on a raspberry pie to manage the videos and a small frontend allows to browse, delete, archive or turn to gif the videos.  
 
 ## Todo / Could do
- - [?] Style...
+ - [ ] Style...
  - [X] Filter videos
- - [?] Docker Build and start not done.
+ - [ ] Docker Build and start not done.
  - [X] Load videos directly, or change home to add a link
  - [ ] Backend url build is static, must change that, we can also build the link in the FE
  - [X] BE change file types into enum & push to vector.
