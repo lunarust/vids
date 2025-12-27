@@ -1,17 +1,15 @@
 # Vids
 
-> Small website to manage the videos recorded using a free security app on an old phone.
+> Very simple & small website to manage the videos recorded using a free security app on an old phone.
 The Backend is set on a raspberry pie to manage the videos and a small frontend allows to browse, delete, archive or turn to gif the videos.  
 
 ## Todo / Could do
- - [ ] Flip the videos list from raw to backup
- - [ ] Style...
- - [ ] Filter videos
- - [ ] Docker Build and start not done.
+ - [?] Style...
+ - [X] Filter videos
+ - [?] Docker Build and start not done.
  - [X] Load videos directly, or change home to add a link
  - [ ] Backend url build is static, must change that, we can also build the link in the FE
  - [X] BE change file types into enum & push to vector.
- - [ ] Disable next & prev button for boundaries indexes
 
 [![Rust](https://github.com/lunarust/vids/actions/workflows/rust.yml/badge.svg)](https://github.com/lunarust/vids/actions/workflows/rust.yml)
 

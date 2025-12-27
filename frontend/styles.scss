@@ -46,7 +46,7 @@ li {
 .top{
   position: fixed;
   left: 600px;
-  top: 400;
+  top: 10px;
   padding-left: 30px;
 }
 #mobile{
@@ -61,10 +61,12 @@ li {
   padding: 20px;
   line-height: 20px;
   flex-direction: column;
+  z-index: 10;
 }
 .title{
     padding-left: 30px;
     padding-right: 30px;
+    top: 0px;
     font-weight: bolder;
     font-size: 16px;
 }
@@ -90,7 +92,7 @@ li {
   margin: 0px;
 }
 
-.button  {
+button  {
   background-color: transparent;
   color: #36454F;
   border-width: 0;
@@ -111,13 +113,17 @@ li {
   touch-action: manipulation;
   width: 120px;
 }
-.button:hover {
+button:hover:enabled {
     color: #DCDCDC;
     background-color:  #36454F;
     box-shadow:0 8px 16px 0 rgba(0,0,0,0.6);
 }
-.button:disabled,
-.button[disabled]{
+button:disabled,
+button:disabled:hover,
+button[disabled]{
+  box-shadow:0 0px 0px 0 rgba(0,0,0,0.0);
+  border: 0px;
+  background-color: #transparent;
   color: #efefef;
 }
 

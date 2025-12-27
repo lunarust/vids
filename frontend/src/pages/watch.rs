@@ -25,15 +25,7 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
    let vidpath = arch_vid.path.clone();
 
    let handle_file_click = Callback::from(move |action: &str| {
-       let mut testurl = format!("/api/v1/");
-       match action {
-           "gif" => testurl = format!("{}/togif", testurl),
-           "soundout" => testurl = format!("{}/soundout", testurl),
-           "extractsound" => testurl = format!("{}/extractsound", testurl),
-           "delete" => testurl = format!("{}/remove", testurl),
-           "archive"  => testurl = format!("{}/archive", testurl),
-           _ => testurl = format!("{}/donothing", testurl),
-       }
+       let url = format!("/api/v1/{}", action);
 
         //let _message = message.clone();
         let vidname = vidname.clone();
@@ -43,8 +35,7 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
 
             let jsonbody = serde_json::to_string(&vidreq).expect("Failed");
 
-            //web_sys::console::log_1(&jsonbody.to_string().into());
-            let _ = Request::post(testurl.as_str())
+            let _ = Request::post(url.as_str())
             .header("Content-Type", "application/json")
             .body(jsonbody.to_string()).expect("DRAMA")
             .send()
@@ -66,12 +57,12 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
              <span id="action">
              <br />
                 <span class="title">{ "Actions: " }</span>
-                 <button onclick={ move |_|{ handle_file_click.emit("gif");}} class="button">{ "Gif it" }</button>
+                 <button onclick={ move |_|{ handle_file_click.emit("togif");}} class="button">{ "Gif it" }</button>
                  <button onclick={ move |_|{ value_soundout.emit("soundout");}} class="button">{ "Mute it" }</button>
                  <button onclick={ move |_|{ value_extractsound.emit("extractsound");}} class="button">{ "Extract sound" }</button>
                  <br />{ "--" }<br />
                  <button onclick={ move |_|{ value_archive.emit("archive");}} disabled={arch_vid.archived} class="button">{ "Archive" }</button>
-                 <button onclick={ move |_|{ value_delete.emit("delete");}} class="button">{ "Delete" }</button>
+                 <button onclick={ move |_|{ value_delete.emit("remove");}} class="button">{ "Delete" }</button>
              </span>
         </div>
     }
@@ -79,7 +70,7 @@ fn VideoDetails(VideoDetailsProps { video }: &VideoDetailsProps) -> Html {
 
 #[function_component]
 pub fn Watch(props: &Props) -> Html {
-    web_sys::console::log_1(&props.vid.name.to_string().into());
+    //web_sys::console::log_1(&props.vid.name.to_string().into());
 
     let vid = &props.vid;
     html!{
